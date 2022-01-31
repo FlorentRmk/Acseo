@@ -25,7 +25,7 @@ class ContactManager
     }
     public function new(Contact $contact) {
         $filename = uniqid().'.json';
-        $path = $this->appKernel->getProjectDir().'\nas\\'.$filename;
+        $path = $this->appKernel->getProjectDir().'/nas/'.$filename;
         $file = fopen($path, 'wb');
         $contact->setFilename($filename);
 
