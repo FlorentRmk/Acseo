@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of contacts{% endblock %}
+
+{% block body %}
+    <table class="table mt-5">
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for key,email in emails %}
+            <tr data-target="#contact{{ key }}" onclick="showToggle(this)">
+                <td colspan="2">{{ key }}</td>
+            </tr>
+            <tr style="display: none">
+                <td>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Question</th>
+                        <th>State</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for contact in email %}
+                        <tr>
+                            <td>
+                                {{ contact.name }}
+                            </td>
+                            <td>
+                                {{ contact.question }}
+
+                            </td>
+                            <td>
+                                {% if false == contact.checked %}
+                                    <button title="Process the contact" class="btn btn js-process-contact" data-href="{{ path('contact_process', {'contact' : contact.id}) }}">
+                                        <i class="fas fa-step-forward"></i>
+                                    </button>
+                                {% else %}
+                                    <i class="fas fa-check"></i>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                </td>
+
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+    {% block javascripts %}
+        {{ parent() }}
+        <script>
+            function showToggle(row) {
+                var content = $(row).next();
+                if (content.is(":visible")) {
+                    content.hide();
+                } else {
+                    content.show();
+                }
+            }
+
+            $(document).ready(function () {
+                $('.js-process-contact').click(function () {
+                    var td = $(this).parent();
+                    $.ajax($(this).data('href'), {
+                        success: function (data) {
+                            td.html('<i class="fas fa-check"></i>');
+                        },
+                        error: function (jqXHR, status, error) {
+                        }
+                    });
+                });
+            })
+        </script>
+    {% endblock %}
